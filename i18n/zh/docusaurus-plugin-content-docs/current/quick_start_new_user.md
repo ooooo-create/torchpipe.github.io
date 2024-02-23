@@ -80,7 +80,7 @@ img = self.precls_trans(cv2.resize(cv2.cvtColor(img, cv2.COLOR_BGR2RGB), (224,22
 ```py
 
 input_shape = torch.ones((1, 3, 224, 224)).cuda()
-self.classification_engine = torch2trt(resnet50, [input_shape], 
+self.classification_engine = torch2trt(resnet50, [input_shape],
                             fp16_mode=self.fp16,
                             max_batch_size=self.cls_trt_max_batchsize,
                             )
@@ -119,8 +119,8 @@ config = torchpipe.parse_toml("resnet50.toml")
 self.classification_engine = pipe(config)
 
 self.classification_engine(bin_data)
- 
- 
+
+
 if TASK_RESULT_KEY not in bin_data.keys():
     print("error decode")
     return results
@@ -145,13 +145,13 @@ precision = "fp16" #精度 目前也可以支持fp32、int8
 #      这里对应的3.1（1).cpu解码
 #           img = cv2.imdecode(img, flags=cv2.IMREAD_COLOR)
 #      注意：
-#           原先解码输出的是BRG的数据格式
-#           DecodeMat这个后端默认输出的也是BRG格式
+#           原先解码输出的是BGR的数据格式
+#           DecodeMat这个后端默认输出的也是BGR格式
 #           因为是CPU解码，所以采用DecodeMat
 #           每个节点完成后需要接上下一个节点的名称，否则默认最后一个节点
 #
 [cpu_decoder]
-backend = "DecodeMat" 
+backend = "DecodeMat"
 next = "cpu_posdecoder"
 
 ## 预处理resize、cvtColorMat操作
@@ -185,17 +185,17 @@ next = "resnet50"
 #        转化方法见[torch转onnx]
 #
 [resnet50]
-backend = "SyncTensor[TensorrtTensor]" 
+backend = "SyncTensor[TensorrtTensor]"
 min = 1
 max = 4
 instance_num = 4
 
-model = "/you/model/path/resnet50.onnx" 
+model = "/you/model/path/resnet50.onnx"
 
 mean="123.675, 116.28, 103.53" # 255*"0.485, 0.456, 0.406"
 std="58.395, 57.120, 57.375" # 255*"0.229, 0.224, 0.225"
 
-# TensorrtTensor 
+# TensorrtTensor
 "model::cache"="/you/model/path/resnet50.trt" # or resnet50.trt.encrypted
 
 ```

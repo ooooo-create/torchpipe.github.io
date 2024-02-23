@@ -8,4 +8,4 @@ type: reference
 
 文档位于https://github.com/torchpipe/torchpipe.github.io
 
-- 提交merge request至main分支
+- 提交pull request至main分支
